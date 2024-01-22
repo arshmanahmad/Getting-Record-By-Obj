@@ -79,6 +79,11 @@ const transactions = [
 const finder = (property, value, array) => {
     const len = array.length;
     const tempData = [];
+    if (typeof value === "number") {
+        if (array[i][property] <= value) {
+            tempData.push(array[i])
+        }
+    }
     for (let i = 0; i < len; i++) {
         if (array[i][property] === value) {
             tempData.push(array[i])
@@ -88,9 +93,12 @@ const finder = (property, value, array) => {
 }
 
 const filterRecords = (filters) => {
-    const { currency, paymentType, paymentMethod } = filters;
+    const { amount, currency, paymentType, paymentMethod } = filters;
 
     let tempArray = [];
+    if (amount) {
+        tempArray = finder("amount", amount, tempArray.length > 0 ? tempArray : transactions)
+    }
 
     if (currency) {
         tempArray = finder("currency", currency, tempArray.length > 0 ? tempArray : transactions)
@@ -106,7 +114,8 @@ const filterRecords = (filters) => {
 }
 
 console.log(filterRecords({
-    currency: "USD",
-    paymentType: "Funds",
-    paymentMethod: "ATM",
+    amount: 120000,
+    // currency: "USD",
+    // paymentType: "Funds",
+    // paymentMethod: "ATM",
 }));
