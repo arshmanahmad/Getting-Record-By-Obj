@@ -45,13 +45,13 @@ const transactions = [
         amount: 50000,
         currency: "USD",
         paymentMethod: "Credit Card",
-        paymentType: "Funds",
+        paymentType: "Easy Paisa",
         date: "2023-10-01T11:11:14.000Za"
     },
     {
         transactionId: "XX2542324265",
         userId: "us1",
-        amount: 300000,
+        amount: 30000,
         currency: "USD",
         paymentMethod: "Mada Card",
         paymentType: "Shopping",
@@ -76,30 +76,48 @@ const transactions = [
         paymentType: "Funds",
     },
 ]
-const finder = (property, value, array) => {
+
+const finder = (property, value, array, userArray) => {
     const len = array.length;
     const tempData = [];
-    if (typeof value === "number") {
-        if (array[i][property] <= value) {
-            tempData.push(array[i])
-        }
-    }
     for (let i = 0; i < len; i++) {
-        if (array[i][property] === value) {
+        if (typeof value === "number") {
+            if (array[i][property] <= value) {
+                tempData.push(array[i])
+            }
+        }
+        else if (property === "name") {
+            const len2 = userArray.length;
+            for (let j = 0; j < len2; j++) {
+                if (value === userArray[j].name) {
+                    userArray[j].id;
+                    if (userArray[j].id === array[i].userId) {
+                        tempData.push(array[i])
+                    }
+                }
+
+            }
+
+        }
+        else if (array[i][property] === value) {
             tempData.push(array[i])
         }
+
     }
     return tempData.length > 0 ? tempData : [];
 }
 
 const filterRecords = (filters) => {
-    const { amount, currency, paymentType, paymentMethod } = filters;
+    const { amount, name, currency, paymentType, paymentMethod } = filters;
 
     let tempArray = [];
+
     if (amount) {
         tempArray = finder("amount", amount, tempArray.length > 0 ? tempArray : transactions)
     }
-
+    if (name) {
+        tempArray = finder("name", name, tempArray.length > 0 ? tempArray : transactions, users)
+    }
     if (currency) {
         tempArray = finder("currency", currency, tempArray.length > 0 ? tempArray : transactions)
     }
@@ -111,11 +129,13 @@ const filterRecords = (filters) => {
     }
 
     return tempArray.length > 0 ? tempArray : "Record Not Found"
+
 }
 
 console.log(filterRecords({
-    amount: 120000,
+    amount: 160000,
+    // name: 'John Doe',
     // currency: "USD",
-    // paymentType: "Funds",
-    // paymentMethod: "ATM",
+    // paymentType: "Shopping",
+    // paymentMethod: "Mada Card",
 }));
